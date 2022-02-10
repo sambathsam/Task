@@ -19,4 +19,6 @@ from task import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home,name='home'),
+    path('geturl/', views.get_url,name='get_url'),
+    path('postdata/',views.postdata,name='postdata'),
 ]
