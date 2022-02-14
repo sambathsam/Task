@@ -15,8 +15,8 @@ inputtable = 'flights.dbo.input_3v'
 def inputget():
 	status = 0
 	Websitecode = 42
-	startid = 2;
-	endid = 5
+	startid = 1;
+	endid = 100
 	selectq = f"select top 1 id, depart, arrive, triptype, departdate, returndate, adults, url, websitecode from {inputtable} with (nolock) where status = {status} and websitecode={Websitecode} and id between {startid} and {endid} order by id"
 	cursor.execute(selectq)
 	resultset = cursor.fetchall() 
@@ -88,10 +88,11 @@ def postdata(request):
 		id_up  = body['id']
 		print(urlins)
 		flyfrom  = re.search(r"flightList\?\w+=(.*?)\-",urlins).group(1)
+		flyto    = re.search(r"flightList\?\w+=.*?\-(.*?)_",urlins).group(1)
 		departuredate = re.search(r"flightList\?\w+=.*?\-.*?_(.*?)&",urlins).group(1)
 		websitecode = 42
 		offlinesource   = re.sub("'", "''", str(fdata))
-		insertq         = "insert into victor_offline (refid,websitecode,data,flyfrom,departuredate) values ('%s', '%s', '%s','%s','%s')"%(id_up,websitecode, offlinesource,flyfrom,departuredate)
+		insertq         = "insert into victor_offline (refid,websitecode,data,flyfrom,departuredate,status,flyto) values ('%s', '%s', '%s','%s','%s','%s','%s')"%(id_up,websitecode, offlinesource,flyfrom,departuredate,0,flyto)
 		offcursor.execute(insertq)
 		offdb.commit()
 		print("data inserted-id-",id_up)
